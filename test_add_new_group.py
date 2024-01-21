@@ -3,6 +3,7 @@ import time
 import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from group import Group
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -23,7 +24,7 @@ class TestLoginAddGroup():
         self.set_window_size()
         self.login("admin", "secret")
         self.open_groups_page()
-        self.create_new_group("Group", "Header", "Comment")
+        self.create_new_group(Group("Group", "Header", "Comment"))
         self.return_to_groups()
         self.logout()
         self.driver.close()
@@ -34,16 +35,16 @@ class TestLoginAddGroup():
     def return_to_groups(self):
         self.driver.find_element(By.LINK_TEXT, "group page").click()
 
-    def create_new_group(self, name, header, footer):
+    def create_new_group(self, group):
         # create new group
         self.driver.find_element(By.NAME, "new").click()
         # fill group form
         self.driver.find_element(By.NAME, "group_name").click()
-        self.driver.find_element(By.NAME, "group_name").send_keys(name)
+        self.driver.find_element(By.NAME, "group_name").send_keys(group.name)
         self.driver.find_element(By.NAME, "group_header").click()
-        self.driver.find_element(By.NAME, "group_header").send_keys(header)
+        self.driver.find_element(By.NAME, "group_header").send_keys(group.header)
         self.driver.find_element(By.NAME, "group_footer").click()
-        self.driver.find_element(By.NAME, "group_footer").send_keys(footer)
+        self.driver.find_element(By.NAME, "group_footer").send_keys(group.footer)
         # submit
         self.driver.find_element(By.NAME, "submit").click()
 
