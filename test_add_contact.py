@@ -4,7 +4,7 @@ import time
 import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from contact import Info, Birthday
+from contact import Contact
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -24,7 +24,7 @@ class TestAddcontact:
         self.go_to_home_page()
         self.driver.set_window_size(1070, 760)
         self.login("admin", "secret")
-        self.creeate_contact(Info("vova", "family", "last", "nick", "comp-2", "adr", "86665557744", "dfdf", new_group="//option[. = 'Group']"), Birthday(bday="//option[. = '26']", bmonth="//option[. = 'September']", byear=2000))
+        self.creeate_contact(Contact("vova", "family", "last", "nick", "comp-2", "adr", "86665557744", "dfdf", "//option[. = '26']", "//option[. = 'September']", 2000, "//option[. = 'Group']"))
         self.return_to_homepage()
         time.sleep(4)
         self.logout()
@@ -35,35 +35,35 @@ class TestAddcontact:
     def return_to_homepage(self):
         self.driver.find_element(By.LINK_TEXT, "home page").click()
 
-    def creeate_contact(self, info, birthday):
+    def creeate_contact(self, contact):
         self.driver.find_element(By.LINK_TEXT, "add new").click()
         self.driver.find_element(By.NAME, "firstname").click()
-        self.driver.find_element(By.NAME, "firstname").send_keys(info.firstname)
+        self.driver.find_element(By.NAME, "firstname").send_keys(contact.firstname)
         self.driver.find_element(By.NAME, "middlename").click()
-        self.driver.find_element(By.NAME, "middlename").send_keys(info.middlename)
+        self.driver.find_element(By.NAME, "middlename").send_keys(contact.middlename)
         self.driver.find_element(By.NAME, "lastname").click()
-        self.driver.find_element(By.NAME, "lastname").send_keys(info.lastname)
+        self.driver.find_element(By.NAME, "lastname").send_keys(contact.lastname)
         self.driver.find_element(By.NAME, "nickname").click()
-        self.driver.find_element(By.NAME, "nickname").send_keys(info.nickname)
+        self.driver.find_element(By.NAME, "nickname").send_keys(contact.nickname)
         self.driver.find_element(By.NAME, "company").click()
-        self.driver.find_element(By.NAME, "company").send_keys(info.company)
+        self.driver.find_element(By.NAME, "company").send_keys(contact.company)
         self.driver.find_element(By.NAME, "address").click()
-        self.driver.find_element(By.NAME, "address").send_keys(info.address)
+        self.driver.find_element(By.NAME, "address").send_keys(contact.address)
         self.driver.find_element(By.NAME, "mobile").click()
-        self.driver.find_element(By.NAME, "mobile").send_keys(info.mobile)
+        self.driver.find_element(By.NAME, "mobile").send_keys(contact.mobile)
         self.driver.find_element(By.NAME, "email").click()
-        self.driver.find_element(By.NAME, "email").send_keys(info.email)
+        self.driver.find_element(By.NAME, "email").send_keys(contact.email)
         self.driver.find_element(By.NAME, "bday").click()
         dropdown = self.driver.find_element(By.NAME, "bday")
-        dropdown.find_element(By.XPATH, birthday.bday).click()
+        dropdown.find_element(By.XPATH, contact.bday).click()
         self.driver.find_element(By.NAME, "bmonth").click()
         dropdown = self.driver.find_element(By.NAME, "bmonth")
-        dropdown.find_element(By.XPATH, birthday.bmonth).click()
+        dropdown.find_element(By.XPATH, contact.bmonth).click()
         self.driver.find_element(By.NAME, "byear").click()
-        self.driver.find_element(By.NAME, "byear").send_keys(birthday.byear)
+        self.driver.find_element(By.NAME, "byear").send_keys(contact.byear)
         self.driver.find_element(By.NAME, "new_group").click()
         dropdown = self.driver.find_element(By.NAME, "new_group")
-        dropdown.find_element(By.XPATH, info.new_group).click()
+        dropdown.find_element(By.XPATH, contact.new_group).click()
         self.driver.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
 
     def login(self, username, password):
