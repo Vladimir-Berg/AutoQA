@@ -12,9 +12,9 @@ def app_contact(request):
 
 
 def test_addcontact(app_contact):
-    app_contact.login("admin", "secret")
+    app_contact.session.login("admin", "secret")
     app_contact.creeate_contact(
         Contact("vova", "family", "last", "nick", "comp-2", "adr", "86665557744", "dfdf", "//option[. = '26']",
                 "//option[. = 'September']", 2000, "//option[. = 'Group']"))
     time.sleep(4)
-    app_contact.logout()
+    app_contact.session.logout()

@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from fixture.session_contact import SessionHelperContact
 
 
 class ApplicationContact:
@@ -7,12 +8,10 @@ class ApplicationContact:
     def __init__(self):
         self.driver = webdriver.Firefox()
         self.driver.set_window_size(1070, 760)
+        self.session = SessionHelperContact(self)
 
     def destroy(self):
         self.driver.quit()
-
-    def logout(self):
-        self.driver.find_element(By.LINK_TEXT, "Logout").click()
 
     def return_to_homepage(self):
         self.driver.find_element(By.LINK_TEXT, "home page").click()
@@ -48,15 +47,6 @@ class ApplicationContact:
         dropdown.find_element(By.XPATH, contact.new_group).click()
         self.driver.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
         self.return_to_homepage()
-
-    def login(self, username, password):
-        self.go_to_home_page()
-        self.driver.get("http://localhost/addressbook/")
-        self.driver.find_element(By.NAME, "user").click()
-        self.driver.find_element(By.NAME, "user").send_keys(username)
-        self.driver.find_element(By.NAME, "pass").click()
-        self.driver.find_element(By.NAME, "pass").send_keys(password)
-        self.driver.find_element(By.CSS_SELECTOR, "input:nth-child(7)").click()
 
     def go_to_home_page(self):
         self.driver.get("http://localhost/addressbook/")
