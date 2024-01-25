@@ -11,7 +11,7 @@ def app(request):
 
 
 def test_login_add_group(app):
-    app.login("admin", "secret")
+    app.session.login("admin", "secret")
     app.create_new_group(Group("Group", "Header", "Comment"))
-    app.logout()
+    app.session.logout()
     app.driver.close()
