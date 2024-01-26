@@ -1,6 +1,7 @@
 from selenium import webdriver
-from fixture.session_group import SessionHelper
+from fixture.session import SessionHelper
 from fixture.group import GroupHelper
+from fixture.contact import ContactHelper
 
 
 class Application:
@@ -10,6 +11,7 @@ class Application:
         self.driver.set_window_size(1070, 759)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
+        self.contact = ContactHelper(self)
 
     def open_home_page(self):
         wd = self.driver
