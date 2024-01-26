@@ -9,7 +9,7 @@ class ContactHelper:
     def return_to_homepage(self):
         self.app.driver.find_element(By.LINK_TEXT, "home page").click()
 
-    def creeate_contact(self, contact):
+    def create(self, contact):
         wd = self.app.driver
         wd.find_element(By.LINK_TEXT, "add new").click()
         wd.find_element(By.NAME, "firstname").click()
