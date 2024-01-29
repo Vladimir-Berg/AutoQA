@@ -73,3 +73,8 @@ class ContactHelper:
         wd.find_element(By.NAME, "byear").click()
         wd.find_element(By.NAME, "byear").send_keys(contact.byear)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
+
+    def delete(self):
+        wd = self.app.driver
+        wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
+        wd.find_element(By.CSS_SELECTOR, "input:nth-child(2)").click()
