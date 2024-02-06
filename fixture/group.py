@@ -31,12 +31,16 @@ class GroupHelper:
 
     def fill_form(self, group):
         wd = self.app.driver
-        wd.find_element(By.NAME, "group_name").click()
-        wd.find_element(By.NAME, "group_name").send_keys(group.name)
-        wd.find_element(By.NAME, "group_header").click()
-        wd.find_element(By.NAME, "group_header").send_keys(group.header)
-        wd.find_element(By.NAME, "group_footer").click()
-        wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
+        self.change_form_text("group_name", group.name)
+        self.change_form_text("group_header", group.header)
+        self.change_form_text("group_footer", group.footer)
+
+    def change_form_text(self, field_name, text):
+        wd = self.app.driver
+        if text is not None:
+            wd.find_element(By.NAME, field_name).click()
+            wd.find_element(By.NAME, field_name).clear()
+            wd.find_element(By.NAME, field_name).send_keys(text)
 
     def delete_first(self):
         wd = self.app.driver
