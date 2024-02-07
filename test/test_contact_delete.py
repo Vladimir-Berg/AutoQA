@@ -1,4 +1,2 @@
-def test_addcontact(app):
-    app.session.login("admin", "secret")
+def test_contact_delete(app):
     app.contact.delete()
-    app.session.logout()

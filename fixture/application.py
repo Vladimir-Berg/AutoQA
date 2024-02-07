@@ -13,6 +13,13 @@ class Application:
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
 
+    def is_valid(self):
+        try:
+            self.driver.current_url
+            return True
+        except:
+            return False
+
     def open_home_page(self):
         wd = self.driver
         wd.get("http://localhost/addressbook/")
