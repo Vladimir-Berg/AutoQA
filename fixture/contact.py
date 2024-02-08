@@ -8,7 +8,9 @@ class ContactHelper:
         self.app = app
 
     def open_home_page(self):
-        self.app.driver.find_element(By.LINK_TEXT, "home").click()
+        wd = self.app.driver
+        if not (wd.find_element(By.XPATH, "//*[@id='search-az']/form/input") is True):
+            wd.find_element(By.LINK_TEXT, "home").click()
 
     def return_to_homepage(self):
         self.app.driver.find_element(By.LINK_TEXT, "home page").click()
@@ -32,8 +34,8 @@ class ContactHelper:
         wd.find_element(By.LINK_TEXT, "add new").click()
         self.fill_form(contact)
         #        wd.find_element(By.NAME, "new_group").click()
-#        dropdown = wd.find_element(By.NAME, "new_group")
-#        dropdown.find_element(By.XPATH, contact.new_group).click()
+        #        dropdown = wd.find_element(By.NAME, "new_group")
+        #        dropdown.find_element(By.XPATH, contact.new_group).click()
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
         self.return_to_homepage()
 
