@@ -13,6 +13,11 @@ class ContactHelper:
     def return_to_homepage(self):
         self.app.driver.find_element(By.LINK_TEXT, "home page").click()
 
+    def count(self):
+        wd = self.app.driver
+        self.open_home_page()
+        return len(wd.find_elements(By.NAME, "selected[]"))
+
     def edit(self, contact):
         wd = self.app.driver
         time.sleep(2)
