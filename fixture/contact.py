@@ -1,5 +1,6 @@
 import time
 from selenium.webdriver.common.by import By
+from model.contact import Contact
 
 
 class ContactHelper:
@@ -27,6 +28,7 @@ class ContactHelper:
         wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
         self.fill_form(contact)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
+        self.return_to_homepage()
 
     def create(self, contact):
         wd = self.app.driver
@@ -72,3 +74,17 @@ class ContactHelper:
         wd = self.app.driver
         wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(2)").click()
+
+    def get_contacts_list(self):
+        wd = self.app.driver
+        self.open_home_page()
+        contacts = []
+        el_index = 2            # запись начинается со второй строки в таблице
+        for element in wd.find_elements(By.NAME, "entry"):
+            text_first = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[3]")).text
+            text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[2]")).text
+            contact_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
+            contacts.append(Contact(firstname=text_first, lastname=text_last, id=contact_id))
+            el_index += 1
+            print(contacts[-1])
+        return contacts

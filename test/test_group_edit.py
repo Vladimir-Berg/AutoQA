@@ -8,4 +8,3 @@ def test_group_edit(app):
     app.group.edit(Group(name="Group123"))
     new_groups = app.group.get_group_list()
     assert len(old_groups) == len(new_groups)
-
