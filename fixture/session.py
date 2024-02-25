@@ -23,7 +23,7 @@ class SessionHelper:
     def ensure_login(self, username, password):
         wd = self.app.driver
         if self.is_logged_in():
-            if self.is_logged_in_as():
+            if self.is_logged_in_as(username):
                 return
             else:
                 self.logout()
