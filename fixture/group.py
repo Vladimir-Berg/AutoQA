@@ -25,6 +25,7 @@ class GroupHelper:
         # submit
         wd.find_element(By.NAME, "submit").click()
         self.return_to_groups()
+        self.group_cache = None
 
     def edit(self, group):
         wd = self.app.driver
@@ -34,6 +35,7 @@ class GroupHelper:
         self.fill_form(group)
         wd.find_element(By.NAME, "update").click()
         self.return_to_groups()
+        self.group_cache = None
 
     def fill_form(self, group):
         wd = self.app.driver
@@ -54,18 +56,22 @@ class GroupHelper:
         wd.find_element(By.NAME, "selected[]").click()
         wd.find_element(By.NAME, "delete").click()
         self.return_to_groups()
+        self.group_cache = None
 
     def open_groups_page(self):
         wd = self.app.driver
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements(By.NAME, "new")) > 0):
             wd.find_element(By.LINK_TEXT, "groups").click()
 
+    group_cache = None
+
     def get_group_list(self):
-        wd = self.app.driver
-        self.open_groups_page()
-        groups = []
-        for element in wd.find_elements(By.CSS_SELECTOR, "span.group"):
-            text = element.text
-            group_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
-            groups.append(Group(name=text, id=group_id))
-        return groups
+        if self.group_cache is None:
+            wd = self.app.driver
+            self.open_groups_page()
+            self.group_cache = []
+            for element in wd.find_elements(By.CSS_SELECTOR, "span.group"):
+                text = element.text
+                group_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
+                self.group_cache.append(Group(name=text, id=group_id))
+        return list(self.group_cache)
