@@ -11,31 +11,15 @@ class GroupHelper:
         wd = self.app.driver
         wd.find_element(By.LINK_TEXT, "group page").click()
 
+    def open_groups_page(self):
+        wd = self.app.driver
+        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements(By.NAME, "new")) > 0):
+            wd.find_element(By.LINK_TEXT, "groups").click()
+
     def count(self):
         wd = self.app.driver
         self.open_groups_page()
         return len(wd.find_elements(By.NAME, "selected[]"))
-
-    def create(self, group):
-        wd = self.app.driver
-        self.open_groups_page()
-        # create new group
-        wd.find_element(By.NAME, "new").click()
-        self.fill_form(group)
-        # submit
-        wd.find_element(By.NAME, "submit").click()
-        self.return_to_groups()
-        self.group_cache = None
-
-    def edit(self, group):
-        wd = self.app.driver
-        self.open_groups_page()
-        wd.find_element(By.NAME, "selected[]").click()
-        wd.find_element(By.NAME, "edit").click()
-        self.fill_form(group)
-        wd.find_element(By.NAME, "update").click()
-        self.return_to_groups()
-        self.group_cache = None
 
     def fill_form(self, group):
         wd = self.app.driver
@@ -50,18 +34,48 @@ class GroupHelper:
             wd.find_element(By.NAME, field_name).clear()
             wd.find_element(By.NAME, field_name).send_keys(text)
 
-    def delete_first(self):
+    def create(self, group):
         wd = self.app.driver
         self.open_groups_page()
-        wd.find_element(By.NAME, "selected[]").click()
+        # create new group
+        wd.find_element(By.NAME, "new").click()
+        self.fill_form(group)
+        # submit
+        wd.find_element(By.NAME, "submit").click()
+        self.return_to_groups()
+        self.group_cache = None
+
+    def edit_first(self, group):
+        self.edit_group_by_index(0, group)
+
+    def edit_group_by_index(self, index, group):
+        wd = self.app.driver
+        self.open_groups_page()
+        self.select_group_by_index(index)
+        wd.find_element(By.NAME, "edit").click()
+        self.fill_form(group)
+        wd.find_element(By.NAME, "update").click()
+        self.return_to_groups()
+        self.group_cache = None
+
+    def delete_first(self):
+        self.delete_group_by_index(0)
+
+    def delete_group_by_index(self, index):
+        wd = self.app.driver
+        self.open_groups_page()
+        self.select_group_by_index(index)
         wd.find_element(By.NAME, "delete").click()
         self.return_to_groups()
         self.group_cache = None
 
-    def open_groups_page(self):
+    def select_first_group(self):
         wd = self.app.driver
-        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements(By.NAME, "new")) > 0):
-            wd.find_element(By.LINK_TEXT, "groups").click()
+        wd.find_element(By.NAME, "selected[]").click()
+
+    def select_group_by_index(self, index):
+        wd = self.app.driver
+        wd.find_elements(By.NAME, "selected[]")[index].click()
 
     group_cache = None
 
