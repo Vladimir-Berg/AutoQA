@@ -35,9 +35,6 @@ class ContactHelper:
         self.open_home_page()
         wd.find_element(By.LINK_TEXT, "add new").click()
         self.fill_form(contact)
-        #        wd.find_element(By.NAME, "new_group").click()
-        #        dropdown = wd.find_element(By.NAME, "new_group")
-        #        dropdown.find_element(By.XPATH, contact.new_group).click()
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
         self.return_to_homepage()
 
@@ -60,7 +57,7 @@ class ContactHelper:
         if select is not None:
             wd.find_element(By.NAME, field_name).click()
             dropdown = wd.find_element(By.NAME, field_name)
-            select = "//option[. = " + select + "]"
+            select = "//option[. = '" + select + "']"
             dropdown.find_element(By.XPATH, select).click()
 
     def change_form_text(self, field_name, text):
