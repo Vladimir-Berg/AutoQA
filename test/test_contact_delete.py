@@ -9,7 +9,7 @@ def test_contact_delete(app):
     old_contacts = app.contact.get_contacts_list()
     app.contact.delete()
     app.driver.implicitly_wait(7)
+    assert len(old_contacts) - 1 == app.contact.count()
     new_contants = app.contact.get_contacts_list()
-    assert len(old_contacts) - 1 == len(new_contants)
     old_contacts[0:1] = []
     assert old_contacts == new_contants
