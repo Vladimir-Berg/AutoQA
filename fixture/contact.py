@@ -29,6 +29,7 @@ class ContactHelper:
         self.fill_form(contact)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
         self.return_to_homepage()
+        self.contact_cache = None
 
     def create(self, contact):
         wd = self.app.driver
@@ -37,6 +38,7 @@ class ContactHelper:
         self.fill_form(contact)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
         self.return_to_homepage()
+        self.contact_cache = None
 
     def fill_form(self, contact):
         wd = self.app.driver
@@ -71,17 +73,21 @@ class ContactHelper:
         wd = self.app.driver
         wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(2)").click()
+        self.contact_cache = None
+
+    contact_cache = None
 
     def get_contacts_list(self):
-        wd = self.app.driver
-        self.open_home_page()
-        contacts = []
-        el_index = 2            # запись начинается со второй строки в таблице
-        for element in wd.find_elements(By.NAME, "entry"):
-            text_first = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[3]")).text
-            text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[2]")).text
-            contact_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
-            contacts.append(Contact(firstname=text_first, lastname=text_last, id=contact_id))
-            el_index += 1
-            print(contacts[-1])
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.driver
+            self.open_home_page()
+            self.contact_cache = []
+            el_index = 2            # запись начинается со второй строки в таблице
+            for element in wd.find_elements(By.NAME, "entry"):
+                text_first = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[3]")).text
+                text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[2]")).text
+                contact_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
+                self.contact_cache.append(Contact(firstname=text_first, lastname=text_last, id=contact_id))
+                el_index += 1
+                print(self.contact_cache[-1])
+        return list(self.contact_cache)
