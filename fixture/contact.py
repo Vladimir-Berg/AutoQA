@@ -51,18 +51,29 @@ class ContactHelper:
             wd.find_element(By.NAME, field_name).clear()
             wd.find_element(By.NAME, field_name).send_keys(text)
 
+    def open_to_edit_contact_by_index(self, index):
+        wd = self.app.driver
+        time.sleep(2)
+        self.open_home_page()
+        wd.find_elements(By.CSS_SELECTOR, "td:nth-child(8) > a > img")[index].click()
+
     def edit_first(self, contact):
         self.edit_contact_by_index(0, contact)
 
     def edit_contact_by_index(self, index, contact):
         wd = self.app.driver
-        time.sleep(2)
-        self.open_home_page()
-        wd.find_elements(By.CSS_SELECTOR, "td:nth-child(8) > a > img")[index].click()
+        self.open_to_edit_contact_by_index(index)
         self.fill_form(contact)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
         self.return_to_homepage()
         self.contact_cache = None
+
+    def open_contact_view_by_index(self, index, contact):
+        wd = self.app.driver
+        time.sleep(2)
+        self.open_home_page()
+        wd.find_elements(By.CSS_SELECTOR, "td:nth-child(7) > a > img")[index].click()
+        self.return_to_homepage()
 
     def create(self, contact):
         wd = self.app.driver
@@ -106,3 +117,7 @@ class ContactHelper:
                 el_index += 1
                 print(self.contact_cache[-1])
         return list(self.contact_cache)
+
+#    def get_contact_info_from_edit_page(self, index):
+#        wd = self.app.driver
+#        self.
