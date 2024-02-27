@@ -21,25 +21,6 @@ class ContactHelper:
         self.open_home_page()
         return len(wd.find_elements(By.NAME, "selected[]"))
 
-    def edit(self, contact):
-        wd = self.app.driver
-        time.sleep(2)
-        self.open_home_page()
-        wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
-        self.fill_form(contact)
-        wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
-        self.return_to_homepage()
-        self.contact_cache = None
-
-    def create(self, contact):
-        wd = self.app.driver
-        self.open_home_page()
-        wd.find_element(By.LINK_TEXT, "add new").click()
-        self.fill_form(contact)
-        wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
-        self.return_to_homepage()
-        self.contact_cache = None
-
     def fill_form(self, contact):
         wd = self.app.driver
         self.change_form_text("firstname", contact.firstname)
@@ -69,11 +50,44 @@ class ContactHelper:
             wd.find_element(By.NAME, field_name).clear()
             wd.find_element(By.NAME, field_name).send_keys(text)
 
-    def delete(self):
+    def edit_first(self, contact):
+        self.edit_contact_by_index(0, contact)
+
+    def edit_contact_by_index(self, index, contact):
         wd = self.app.driver
-        wd.find_element(By.CSS_SELECTOR, "tr:nth-child(2) > .center:nth-child(8) img").click()
-        wd.find_element(By.CSS_SELECTOR, "input:nth-child(2)").click()
+        time.sleep(2)
+        self.open_home_page()
+        wd.find_elements(By.CSS_SELECTOR, "td:nth-child(8) > a > img")[index].click()
+        self.fill_form(contact)
+        wd.find_element(By.CSS_SELECTOR, "input:nth-child(74)").click()
+        self.return_to_homepage()
         self.contact_cache = None
+
+    def create(self, contact):
+        wd = self.app.driver
+        self.open_home_page()
+        wd.find_element(By.LINK_TEXT, "add new").click()
+        self.fill_form(contact)
+        wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
+        self.return_to_homepage()
+        self.contact_cache = None
+
+    def delete_first(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
+        wd = self.app.driver
+        self.select_contact_by_index(index)
+        wd.find_element(By.XPATH, "//*[@id='content']/form[2]/div[2]/input").click()
+        self.contact_cache = None
+
+    def select_first_contact(self):
+        wd = self.app.driver
+        wd.find_element(By.NAME, "selected[]").click()
+
+    def select_contact_by_index(self, index):
+        wd = self.app.driver
+        wd.find_elements(By.NAME, "selected[]")[index].click()
 
     contact_cache = None
 
