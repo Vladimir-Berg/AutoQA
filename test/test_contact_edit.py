@@ -5,7 +5,7 @@ from random import randrange
 def test_contact_edit(app):
     if app.contact.count() == 0:
         app.contact.create(
-            Contact("vova", "family", "last", "nick", "comp-2", "adr", "86665557744", "dfdf", "26",
+            Contact("vova", "family", "Фамилия", "nick", "comp-2", "adr", "86665557744", "86665557755", "dfdf", "26",
                     "September", 2000))
     old_contacts = app.contact.get_contacts_list()
     index = randrange(len(old_contacts))
