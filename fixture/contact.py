@@ -1,6 +1,8 @@
 import time
 from selenium.webdriver.common.by import By
 from model.contact import Contact
+import re
+from selenium.common.exceptions import NoSuchElementException
 
 
 class ContactHelper:
@@ -10,8 +12,10 @@ class ContactHelper:
 
     def open_home_page(self):
         wd = self.app.driver
-        if not (wd.find_element(By.XPATH, "//*[@id='search-az']/form/input") is True):
-            wd.find_element(By.LINK_TEXT, "home").click()
+        try:
+            found = wd.find_element(By.XPATH, "//*[@id='search-az']/form/input")
+        except NoSuchElementException:
+            wd.find_element(By.CSS_SELECTOR, "#nav > ul > li:nth-child(1) > a").click()
 
     def return_to_homepage(self):
         self.app.driver.find_element(By.LINK_TEXT, "home page").click()
@@ -22,7 +26,6 @@ class ContactHelper:
         return len(wd.find_elements(By.NAME, "selected[]"))
 
     def fill_form(self, contact):
-        wd = self.app.driver
         self.change_form_text("firstname", contact.firstname)
         self.change_form_text("middlename", contact.middlename)
         self.change_form_text("lastname", contact.lastname)
@@ -68,12 +71,19 @@ class ContactHelper:
         self.return_to_homepage()
         self.contact_cache = None
 
-    def open_contact_view_by_index(self, index, contact):
+    def open_contact_view_by_index(self, index):
         wd = self.app.driver
         time.sleep(2)
         self.open_home_page()
         wd.find_elements(By.CSS_SELECTOR, "td:nth-child(7) > a > img")[index].click()
-        self.return_to_homepage()
+
+    def get_contacts_from_view_page(self, index):
+        wd = self.app.driver
+        self.open_contact_view_by_index(index)
+        text = wd.find_element(By.ID, "content").text
+        mobilephone = re.search('M: (.*)', text).group(1)
+        workphone = re.search('W: (.*)', text).group(1)
+        return Contact(mobilephone=mobilephone, workphone=workphone)
 
     def create(self, contact):
         wd = self.app.driver
@@ -110,14 +120,27 @@ class ContactHelper:
             self.contact_cache = []
             el_index = 2            # запись начинается со второй строки в таблице
             for element in wd.find_elements(By.NAME, "entry"):
-                text_first = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[3]")).text
-                text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) + "]/td[2]")).text
+                text_first = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) +
+                                                             "]/td[3]")).text
+                text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) +
+                                                            "]/td[2]")).text
                 contact_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
-                self.contact_cache.append(Contact(firstname=text_first, lastname=text_last, id=contact_id))
+                all_phones = element.find_element(By.CSS_SELECTOR, "td:nth-child(6)").text.splitlines()
+                print('\n' + all_phones[0] + '\n' + all_phones[1])
+                self.contact_cache.append(Contact(firstname=text_first, lastname=text_last, id=contact_id,
+                                                  mobilephone=all_phones[0], workphone=all_phones[1]))
                 el_index += 1
                 print(self.contact_cache[-1])
         return list(self.contact_cache)
 
-#    def get_contact_info_from_edit_page(self, index):
-#        wd = self.app.driver
-#        self.
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.driver
+        self.open_to_edit_contact_by_index(index)
+        firstname = wd.find_element(By.NAME, "firstname").get_attribute("value")
+        lastname = wd.find_element(By.NAME, "lastname").get_attribute("value")
+        id = wd.find_element(By.NAME, "id").get_attribute("value")
+        mobilephone = wd.find_element(By.NAME, "mobile").get_attribute("value")
+        workphone = wd.find_element(By.NAME, "work").get_attribute("value")
+        print(mobilephone + '\n' + workphone)
+        return Contact(firstname=firstname, lastname=lastname, id=id,
+                       mobilephone=mobilephone, workphone=workphone)
