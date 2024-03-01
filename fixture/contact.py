@@ -127,16 +127,10 @@ class ContactHelper:
                 text_last = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) +
                                                             "]/td[2]")).text
                 contact_id = element.find_element(By.NAME, "selected[]").get_attribute("value")
-                all_phones = element.find_element(By.CSS_SELECTOR, "td:nth-child(6)").text.splitlines()
-                print('\n' + all_phones[0] + '\n' + all_phones[1] + '\n' + all_phones[2])
+                all_phones = element.find_element(By.CSS_SELECTOR, "td:nth-child(6)").text
                 self.contact_cache.append(Contact(firstname=text_first, lastname=text_last, id=contact_id,
-                                                  homephone=all_phones[0], mobilephone=all_phones[1], workphone=all_phones[2]))
+                                                  all_phones_on_home_page=all_phones))
                 el_index += 1
-                print(self.contact_cache[-1])
-            print()
-            print()
-            print(list(self.contact_cache))
-            print()
         return list(self.contact_cache)
 
     def get_contact_info_from_edit_page(self, index):
@@ -148,6 +142,5 @@ class ContactHelper:
         homephone = wd.find_element(By.NAME, "home").get_attribute("value")
         mobilephone = wd.find_element(By.NAME, "mobile").get_attribute("value")
         workphone = wd.find_element(By.NAME, "work").get_attribute("value")
-        print(homephone + '\n' + mobilephone + '\n' + workphone)
         return Contact(firstname=firstname, lastname=lastname, id=id,
                        homephone=homephone, mobilephone=mobilephone, workphone=workphone)
