@@ -35,7 +35,9 @@ class ContactHelper:
         self.change_form_text("home", contact.homephone)
         self.change_form_text("mobile", contact.mobilephone)
         self.change_form_text("work", contact.workphone)
-        self.change_form_text("email", contact.email)
+        self.change_form_text("email", contact.email1)
+        self.change_form_text("email2", contact.email2)
+        self.change_form_text("email3", contact.email3)
         self.change_form_select("bday", contact.bday)
         self.change_form_select("bmonth", contact.bmonth)
         self.change_form_text("byear", contact.byear)
@@ -93,7 +95,9 @@ class ContactHelper:
         wd.find_element(By.LINK_TEXT, "add new").click()
         self.fill_form(contact)
         wd.find_element(By.CSS_SELECTOR, "input:nth-child(75)").click()
+        wd.implicitly_wait(4)
         self.return_to_homepage()
+        wd.implicitly_wait(4)
         self.contact_cache = None
 
     def delete_first(self):
