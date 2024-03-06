@@ -1,12 +1,8 @@
 from model.contact import Contact
-import random
-import string
-import pytest
 
 
-
-@pytest.mark.parametrize("contact", testdata, ids=[repr(x) for x in testdata])
-def test_addcontact(app, contact):
+def test_addcontact(app, data_contacts):
+    contact = data_contacts
     old_contacts = app.contact.get_contacts_list()
     app.contact.create(contact)
     assert len(old_contacts) + 1 == app.contact.count()
