@@ -1,10 +1,8 @@
 import random
-
 from model.contact import Contact
-from random import randrange
 
 
-def test_contact_delete(app, db):
+def test_contact_delete(app, db, check_ui):
     if len(db.get_contacts_list()) == 0:
         app.contact.create(
             Contact("Vladimir", "Vova-mid", "Berg", "Vova-nick", "CompStyleee", "Street 5 Home 6",
@@ -18,3 +16,5 @@ def test_contact_delete(app, db):
     new_contacts = db.get_contacts_list()
     old_contacts.remove(contact)
     assert old_contacts == new_contacts
+    if check_ui:
+        assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contacts_list(), key=Contact.id_or_max)
