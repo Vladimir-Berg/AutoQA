@@ -158,7 +158,9 @@ class ContactHelper:
                 address = element.find_element(By.XPATH, ("//*[@id='maintable']/tbody/tr[" + str(el_index) +
                                                           "]/td[4]")).text
                 all_phones = element.find_element(By.CSS_SELECTOR, "td:nth-child(6)").text
+                all_phones = all_phones.replace('\n', '')
                 all_emails = element.find_element(By.CSS_SELECTOR, "td:nth-child(5)").text
+                all_emails = all_emails.replace('\n', '')
                 self.contact_cache.append(Contact(firstname=text_first, lastname=text_last, id=contact_id,
                                                   all_phones_on_home_page=all_phones,
                                                   all_emails_on_home_page=all_emails,

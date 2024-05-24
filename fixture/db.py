@@ -40,7 +40,7 @@ class DbFixture:
                                     nickname=nickname, company=company, address=address,
                                     homephone=home, mobilephone=mobile, workphone=work,
                                     email1=email, email2=email2, email3=email3,
-                                    bday=bday, bmonth=bmonth, byear=byear, ))
+                                    bday=bday, bmonth=bmonth, byear=byear))
         finally:
             cursor.close()
 

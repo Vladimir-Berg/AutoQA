@@ -27,15 +27,18 @@ class Contact:
         self.id = id
 
     def __repr__(self):
-        return "Contact(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" % (
+        return "Contact(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" % (
             self.firstname, self.lastname, self.id, self.middlename, self.nickname,
             self.company, self.address,
             self.homephone, self.mobilephone, self.workphone,
             self.email1, self.email2, self.email3,
-            self.bday, self.bmonth, self.byear)
+            self.bday, self.bmonth, self.byear, self.all_phones_on_home_page, self.all_emails_on_home_page)
 
     def __eq__(self, other):
-        return (self.id is None or other.id is None or self.id == other.id) and self.firstname == other.firstname
+        return ((self.id is None or other.id is None or self.id == other.id)
+                and self.lastname == other.lastname
+                and self.firstname == other.firstname
+                and self.address == other.address)
 
     def id_or_max(self):
         if self.id:
