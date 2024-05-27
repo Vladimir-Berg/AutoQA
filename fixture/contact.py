@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from model.contact import Contact
 import re
 from selenium.common.exceptions import NoSuchElementException
+from fixture.group import GroupHelper
 
 
 class ContactHelper:
@@ -187,6 +188,7 @@ class ContactHelper:
 
     def get_groups_from_list(self):
         wd = self.app.driver
+        self.open_home_page()
         wd.find_element(By.NAME, "to_group").click()
         dropdown = wd.find_element(By.NAME, "to_group")
         group_list_to_add = []
@@ -194,16 +196,28 @@ class ContactHelper:
             group_list_to_add.append(item.get_attribute('value'))
         return group_list_to_add
 
-    def select_group_to_add(self, group_id):
+    def select_group_in_list(self, group_id):
         wd = self.app.driver
         wd.find_element(By.NAME, "to_group").click()
         dropdown = wd.find_element(By.NAME, "to_group")
-        print('elements --- ', dropdown.find_elements(By.CSS_SELECTOR, 'option[value="%s"]' % group_id))
+        dropdown.find_element(By.CSS_SELECTOR, 'option[value="%s"]' % group_id).click()
+
+    def select_group_to_view_contacts(self, group_id):
+        wd = self.app.driver
+        wd.find_element(By.NAME, "to_group").click()
+        dropdown = wd.find_element(By.NAME, "group")
         dropdown.find_element(By.CSS_SELECTOR, 'option[value="%s"]' % group_id).click()
 
     def add_contact_in_group(self, contact_id, group_id):
         wd = self.app.driver
         self.open_home_page()
         self.select_contact_by_id(contact_id)
-        self.select_group_to_add(group_id)
+        self.select_group_in_list(group_id)
         wd.find_element(By.NAME, "add").click()
+
+    def delete_contact_from_group(self, group_id, contact_id):
+        wd = self.app.driver
+        self.open_home_page()
+        self.select_group_to_view_contacts(group_id)
+        wd.find_element(By.ID, contact_id).click()
+        wd.find_element(By.NAME, "remove").click()

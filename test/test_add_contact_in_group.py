@@ -3,7 +3,7 @@ import random
 from fixture.orm import ORMFixture
 
 
-def test_add_contact_in_group(app, db, check_ui):
+def test_add_contact_in_group(app, db):
     db = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
     if len(db.get_contact_list()) == 0:
         app.contact.create(
