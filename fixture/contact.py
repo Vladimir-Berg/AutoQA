@@ -184,3 +184,26 @@ class ContactHelper:
         return Contact(firstname=firstname, lastname=lastname, id=id,
                        homephone=homephone, mobilephone=mobilephone, workphone=workphone,
                        email1=email1, email2=email2, email3=email3, address=address)
+
+    def get_groups_from_list(self):
+        wd = self.app.driver
+        wd.find_element(By.NAME, "to_group").click()
+        dropdown = wd.find_element(By.NAME, "to_group")
+        group_list_to_add = []
+        for item in dropdown.find_elements(By.CSS_SELECTOR, 'option[value]'):
+            group_list_to_add.append(item.get_attribute('value'))
+        return group_list_to_add
+
+    def select_group_to_add(self, group_id):
+        wd = self.app.driver
+        wd.find_element(By.NAME, "to_group").click()
+        dropdown = wd.find_element(By.NAME, "to_group")
+        print('elements --- ', dropdown.find_elements(By.CSS_SELECTOR, 'option[value="%s"]' % group_id))
+        dropdown.find_element(By.CSS_SELECTOR, 'option[value="%s"]' % group_id).click()
+
+    def add_contact_in_group(self, contact_id, group_id):
+        wd = self.app.driver
+        self.open_home_page()
+        self.select_contact_by_id(contact_id)
+        self.select_group_to_add(group_id)
+        wd.find_element(By.NAME, "add").click()
