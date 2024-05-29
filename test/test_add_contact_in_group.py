@@ -15,21 +15,34 @@ def test_add_contact_in_group(app, db):
     if len(db.get_groups_list()) == 0:
         app.group.create(Group("Group1", "Header1", "Footer1"))
 
-    groups_list = app.contact.get_groups_from_list()
+    # Первый способ
 
-    empty_groups = check_empty_groups(db, groups_list)
+    #    groups_list = app.contact.get_groups_from_list()
+    #    empty_groups = check_empty_groups(db, groups_list)
+    #    if len(empty_groups) == 0:
+    #       group = Group('1', '1', '1')
+    #       app.group.create(group)
+    #       groups_list = app.contact.get_groups_from_list()
+    #       empty_groups = check_empty_groups(db, groups_list)
+
+    # Второй способ
+    empty_groups = db.get_groups_without_contacts()
+    print('empty_groups', empty_groups)
     if len(empty_groups) == 0:
         group = Group('1', '1', '1')
         app.group.create(group)
-        groups_list = app.contact.get_groups_from_list()
-        empty_groups = check_empty_groups(db, groups_list)
+        empty_groups = db.get_groups_without_contacts()
+        print('empty_groups', empty_groups)
 
     group = random.choice(empty_groups)
     old_contacts = db.get_contact_list()
     contact = random.choice(old_contacts)
-    old_contacts_in_group = db.get_contacts_in_group(group)
-    app.contact.add_contact_in_group(contact.id, group)
-    new_contacts_in_group = db.get_contacts_in_group(group)
+
+    # при первом способе вместо group.id указывать group_id
+    old_contacts_in_group = db.get_contacts_in_group(group.id)  # при первом способе вместо group.id указывать group_id
+    app.contact.add_contact_in_group(contact.id, group.id)  # при первом способе вместо group.id указывать group_id
+    new_contacts_in_group = db.get_contacts_in_group(group.id)  # при первом способе вместо group.id указывать group_id
+
     old_contacts_in_group.append(contact)
     assert sorted(old_contacts_in_group, key=Contact.id_or_max) == sorted(new_contacts_in_group, key=Contact.id_or_max)
 
