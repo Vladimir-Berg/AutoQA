@@ -15,19 +15,14 @@ def clear_phones(s):
     return re.sub("[-, ()]", "", s)
 
 
-def clear_emails(s):
-    return re.sub("[ ]", "", s)
-
-
 def merge_phone_from_edit_page(contact):
-    return '\n'.join(filter(lambda x: x != '',
-                            map(lambda x: clear_phones(x),
-                                filter(lambda x: x is not None,
-                                       [contact.homephone, contact.mobilephone, contact.workphone]))))
+    return ''.join(filter(lambda x: x != '',
+                          map(lambda x: clear_phones(x),
+                              filter(lambda x: x is not None,
+                                     [contact.homephone, contact.mobilephone, contact.workphone]))))
 
 
 def merge_emails_from_edit_page(contact):
-    return '\n'.join(filter(lambda x: x != '',
-                            map(lambda x: clear_emails(x),
-                                filter(lambda x: x is not None,
-                                       [contact.email1, contact.email2, contact.email3]))))
+    return ''.join(filter(lambda x: x != '',
+                          filter(lambda x: x is not None,
+                                 [contact.email1, contact.email2, contact.email3])))
